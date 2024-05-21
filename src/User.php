@@ -6,13 +6,14 @@ class User {
     private string $lastName;
     private string $firstName;
     private DateTime $birthDate;
-    // Constante pour l'age minimum
+    private string $password;
 
-    public function __construct(string $email, string $lastName, string $firstName, DateTime $birthDate) {
+    public function __construct(string $email, string $lastName, string $firstName, DateTime $birthDate, string $password) {
         $this->email = $email;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
         $this->birthDate = $birthDate;
+        $this->password = $password;
     }
 
     public function getEmail(): string {
@@ -46,6 +47,12 @@ class User {
         if ($age < 13) {
             return false;
         }
+
+        $passwordRegex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,40}$/';
+        if (!preg_match($passwordRegex, $this->password)) {
+            return false;
+        }
+
         return true;
     }
 }
