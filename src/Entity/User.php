@@ -1,14 +1,16 @@
 <?php
 
+namespace src\Entity;
+
 class User {
 
     private string $email;
     private string $lastName;
     private string $firstName;
-    private DateTime $birthDate;
+    private \DateTime $birthDate;
     private string $password;
 
-    public function __construct(string $email, string $lastName, string $firstName, DateTime $birthDate, string $password) {
+    public function __construct(string $email, string $lastName, string $firstName, \DateTime $birthDate, string $password) {
         $this->email = $email;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
@@ -54,5 +56,16 @@ class User {
         }
 
         return true;
+    }
+
+    public static function initDataBase() : string {
+        return "CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            email VARCHAR(255) NOT NULL,
+            last_name VARCHAR(50) NOT NULL,
+            first_name VARCHAR(50) NOT NULL,
+            birth_date DATE NOT NULL,
+            password VARCHAR(255) NOT NULL
+        )";
     }
 }

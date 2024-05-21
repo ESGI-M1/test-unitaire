@@ -1,5 +1,7 @@
 <?php
 
+namespace src\Entity;
+
 class Item {
     private string $name;
     private string $content;
@@ -25,5 +27,14 @@ class Item {
 
     public function getCreationDate(): DateTime {
         return $this->creationDate;
+    }
+
+    public static function initDataBase() : string {
+        return "CREATE TABLE IF NOT EXISTS item (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(50) NOT NULL,
+            content TEXT NOT NULL,
+            creation_date DATETIME NOT NULL
+        )";
     }
 }
