@@ -3,29 +3,46 @@ version: '3.8'
 services:
   web:
     image: php:8.2-apache
+    container_name: web
     ports:
       - "3000:80"
     volumes:
-      - .:/var/www/html
+      - ./:/var/www/html
+    working_dir: /var/www/html
     depends_on:
       - db
-    networks:
-      - my_network
 
   db:
     image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: mydatabase
-      MYSQL_USER: myuser
-      MYSQL_PASSWORD: mypassword
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     volumes:
       - db_data:/var/lib/mysql
-    networks:
-      - my_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "3001:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    depends_on:
+      - db
+
+  composer:
+    image: composer
+    container_name: composer
+    volumes:
+      - ./:/app
+    working_dir: /app
+    command: install
 
 volumes:
   db_data:
-
-networks:
-  my_network:
