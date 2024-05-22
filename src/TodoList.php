@@ -33,7 +33,8 @@ class TodoList {
         return true;
     }
 
-    private function sendEmailNotification(): void {
+    // should be in private but need to be in public to be mocked
+    public function sendEmailNotification(): void {
         $to = "melvin.pierre.mp@gmail.com";
         $subject = "TodoList Notification";
         $message = "You have reached 8 items in your TodoList.";

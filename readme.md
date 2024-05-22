@@ -1,1 +1,2 @@
-Commande de test : ./vendor/bin/phpunit tests
+- Commande d'installation : composer install
+- Commande de test : ./vendor/bin/phpunit tests

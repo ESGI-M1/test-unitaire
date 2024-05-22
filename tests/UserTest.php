@@ -3,44 +3,99 @@
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase {
+    const VALID_AGE = 18;
+    const INVALID_AGE = 12;
+    const VALID_PASSWORD = "Password1";
+    const INVALID_PASSWORD = "short1";
+    const VALID_EMAIL = "test@example.com";
+    const INVALID_EMAIL = "invalid-email";
 
     public function testUserIsValid() {
-        $user = new User("test@example.com", "Doe", "John", new DateTime("2000-01-01"), "Password1");
+        $user = new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
         $this->assertTrue($user->isValid());
     }
 
     public function testUserInvalidEmail() {
-        $user = new User("invalid-email", "Doe", "John", new DateTime("2000-01-01"), "Password1");
+        $user = new User(
+            self::INVALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
         $this->assertFalse($user->isValid());
     }
 
     public function testUserEmptyEmail() {
-        $user = new User("", "Doe", "John", new DateTime("2000-01-01"), "Password1");
+        $user = new User(
+            "",
+            "Doe",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
         $this->assertFalse($user->isValid());
     }
 
     public function testUserEmptyLastName() {
-        $user = new User("test@example.com", "", "John", new DateTime("2000-01-01"), "Password1");
+        $user = new User(
+            self::VALID_EMAIL,
+            "",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
         $this->assertFalse($user->isValid());
     }
 
     public function testUserEmptyFirstName() {
-        $user = new User("test@example.com", "Doe", "", new DateTime("2000-01-01"), "Password1");
+        $user = new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
         $this->assertFalse($user->isValid());
     }
 
     public function testUserUnderage() {
-        $user = new User("test@example.com", "Doe", "John", new DateTime("2015-01-01"), "Password1");
+        $user = new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-" . self::INVALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
         $this->assertFalse($user->isValid());
     }
 
     public function testUserExactly13YearsOld() {
-        $user = new User("test@example.com", "Doe", "John", new DateTime(date('Y-m-d', strtotime('-13 years'))), "Password1");
+        $user = new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-13 years"),
+            self::VALID_PASSWORD
+        );
         $this->assertTrue($user->isValid());
     }
 
     public function testUserInvalidPassword() {
-        $user = new User("test@example.com", "Doe", "John", new DateTime("2000-01-01"), "short1");
+        $user = new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::INVALID_PASSWORD
+        );
         $this->assertFalse($user->isValid());
     }
 }
+?>
