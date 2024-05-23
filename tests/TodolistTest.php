@@ -13,13 +13,16 @@ class TodoListTest extends TestCase {
         $todoListMock->expects($this->once())
                      ->method('sendEmailNotification');
 
+        $yesterday = new DateTime("-1 day");
+
         for ($i = 1; $i <= 8; $i++) {
-            $item = new Item("Item" . $i, "Content for item " . $i);
+            $item = new Item("Item" . $i, "Content for item " . $i, (clone $yesterday)->modify("+$i hours"));
             $todoListMock->addItem($item);
         }
 
         // Check if items count is as expected
         $this->assertCount(8, $todoListMock->getItems());
+        $this->assertTrue($todoListMock->isValid());
     }
 
 

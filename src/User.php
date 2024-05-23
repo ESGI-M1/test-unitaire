@@ -9,6 +9,25 @@ class User {
     private string $password;
 
     public function __construct(string $email, string $lastName, string $firstName, DateTime $birthDate, string $password) {
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException("Invalid email");
+        }
+
+        if (empty($lastName) || empty($firstName)) {
+            throw new InvalidArgumentException("First name or last name cannot be empty");
+        }
+
+        $now = new DateTime();
+        $age = $now->diff($birthDate)->y;
+        if ($age < 13) {
+            throw new InvalidArgumentException("User must be at least 13 years old");
+        }
+
+        $passwordRegex = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,40}$/';
+        if (!preg_match($passwordRegex, $password)) {
+            throw new InvalidArgumentException("Invalid password");
+        }
+
         $this->email = $email;
         $this->lastName = $lastName;
         $this->firstName = $firstName;
@@ -33,7 +52,6 @@ class User {
     }
 
     public function isValid(): bool {
-
         if (empty($this->email) || !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             return false;
         }

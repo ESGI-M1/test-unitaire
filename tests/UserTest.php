@@ -28,168 +28,254 @@ class UserTest extends TestCase {
     }
 
     public function testUserInvalidEmail() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid email");
+
+        new User(
             self::INVALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::VALID_PASSWORD
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserEmptyEmail() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid email");
+
+        new User(
             "",
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::VALID_PASSWORD
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserEmptyLastName() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("First name or last name cannot be empty");
+
+        new User(
             self::VALID_EMAIL,
             "",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::VALID_PASSWORD
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserEmptyFirstName() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("First name or last name cannot be empty");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::VALID_PASSWORD
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserUnderage() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("User must be at least 13 years old");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::INVALID_AGE . " years"),
             self::VALID_PASSWORD
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserNegativeAge() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("User must be at least 13 years old");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::INVALID_AGE_NEGATIVE . " years"),
             self::VALID_PASSWORD
         );
-        $this->assertFalse($user->isValid());
-    }
-
-    public function testUserExactly13YearsOld() {
-        $user = new User(
-            self::VALID_EMAIL,
-            "Doe",
-            "John",
-            new DateTime("-13 years"),
-            self::VALID_PASSWORD
-        );
-        $this->assertTrue($user->isValid());
-    }
-
-    public function testUserValidPassword() {
-        $user = new User(
-            self::VALID_EMAIL,
-            "Doe",
-            "John",
-            new DateTime("-" . self::VALID_AGE . " years"),
-            self::VALID_PASSWORD
-        );
-        $this->assertTrue($user->isValid());
     }
 
     public function testUserPasswordNoNumber() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid password");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::INVALID_PASSWORD_NO_NUMBER
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserPasswordNoLetter() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid password");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::INVALID_PASSWORD_NO_LETTER
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserPasswordNoUppercase() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid password");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::INVALID_PASSWORD_NO_UPPERCASE
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserPasswordNoLowercase() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid password");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::INVALID_PASSWORD_NO_LOWERCASE
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserPasswordTooShort() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid password");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::INVALID_PASSWORD_TOO_SHORT
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserPasswordTooLong() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid password");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             self::INVALID_PASSWORD_TOO_LONG
         );
-        $this->assertFalse($user->isValid());
     }
 
     public function testUserEmptyPassword() {
-        $user = new User(
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid password");
+
+        new User(
             self::VALID_EMAIL,
             "Doe",
             "John",
             new DateTime("-" . self::VALID_AGE . " years"),
             ""
         );
-        $this->assertFalse($user->isValid());
+    }
+
+    public function testGetters() {
+        $user = new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
+
+        $this->assertEquals(self::VALID_EMAIL, $user->getEmail());
+        $this->assertEquals("Doe", $user->getLastName());
+        $this->assertEquals("John", $user->getFirstName());
+        $this->assertEquals(
+            (new DateTime("-" . self::VALID_AGE . " years"))->format('Y-m-d'), 
+            $user->getBirthDate()->format('Y-m-d')
+        );
+    }
+
+    public function testConstructorInvalidEmail() {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid email");
+
+        new User(
+            self::INVALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
+    }
+
+    public function testConstructorEmptyFirstName() {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("First name or last name cannot be empty");
+
+        new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
+    }
+
+    public function testConstructorEmptyLastName() {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("First name or last name cannot be empty");
+
+        new User(
+            self::VALID_EMAIL,
+            "",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
+    }
+
+    public function testConstructorUnderage() {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("User must be at least 13 years old");
+
+        new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-" . self::INVALID_AGE . " years"),
+            self::VALID_PASSWORD
+        );
+    }
+
+    public function testConstructorInvalidPassword() {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid password");
+
+        new User(
+            self::VALID_EMAIL,
+            "Doe",
+            "John",
+            new DateTime("-" . self::VALID_AGE . " years"),
+            self::INVALID_PASSWORD_TOO_SHORT
+        );
     }
 }
-?>

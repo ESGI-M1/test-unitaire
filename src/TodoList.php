@@ -4,6 +4,7 @@ class TodoList {
     private array $items = [];
     private const MAX_ITEMS = 10;
     private const EMAIL_THRESHOLD = 8;
+    private const DELAY = 30;
 
     public function addItem(Item $item): bool {
         if (count($this->items) >= self::MAX_ITEMS) {
@@ -18,11 +19,12 @@ class TodoList {
 
         if (!empty($this->items)) {
             $lastItem = end($this->items);
-            $interval = (new DateTime())->diff($lastItem->getCreationDate());
-            if ($interval->i < 30) {
+            $interval = ($lastItem->getCreationDate())->diff(new DateTime());
+            if ($interval->i < self::DELAY && $interval->h === 0 && $interval->d === 0 && $interval->m === 0 && $interval->y === 0) {
                 throw new Exception("You must wait at least 30 minutes between item creations.");
             }
         }
+
 
         $this->items[] = $item;
 
@@ -47,5 +49,9 @@ class TodoList {
 
     public function getItems(): array {
         return $this->items;
+    }
+
+    public function isValid(){
+        return count($this->items) <= self::MAX_ITEMS;
     }
 }
